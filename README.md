@@ -1,2 +1,2 @@
-# small_python_projects
+# Small Python Projects
 Repository for small Python projects done using different resources (books, websites, etc.).
