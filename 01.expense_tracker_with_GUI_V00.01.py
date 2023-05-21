@@ -101,6 +101,7 @@ def save_file():
         # WRITE THE FILE
         writer_row = csv.writer(file)
         
+        
         # IF THE FILE HAS A SIZE OF 0, THEN IT MEANS THAT IS EMPTY
         if os.stat(file_path).st_size == 0:
             print('File is empty!')
@@ -114,7 +115,7 @@ def save_file():
                 # SAVE THE FINAL LIST OF ELEMENTS
                 writer_row.writerow(entry_list)
                 print("The new expense has been recorded!")
-
+                entry_list.clear()
 
         else:
             # IF THE FILE DOES EXISTS, THEN OPEN IT AND INSERT THE DATA
@@ -124,7 +125,9 @@ def save_file():
                 # SAVE THE FINAL LIST OF ELEMENTS
                 writer_row.writerow(entry_list)
                 print("The new expense has been recorded!")
+                entry_list.clear()
 
+    return
 
 
 # DEFINE A FUNCTION TO CLOSE THE WINDOW
@@ -166,7 +169,7 @@ frame_save_file.grid(column=0, row=4, columnspan=2, padx = 3, pady = 3, sticky=N
 # SAVE THE FINAL FILE
 frame_close_window = Frame(root, background="#e32222")
 # frame_item_store.pack(ipadx = 15, ipady=15, padx=15, pady=10, expand=True, fill=X, side=LEFT)
-frame_close_window.grid(column=0, row=5, columnspan=2, padx = 3, pady = 3, sticky=N + W + E)
+frame_close_window.grid(column=0, row=6, columnspan=2, padx = 3, pady = 3, sticky=N + W + E)
 
 ###########################################
 ###### Create labels, entry, buttons ######
