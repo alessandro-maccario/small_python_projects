@@ -115,6 +115,8 @@ def save_file():
                 # SAVE THE FINAL LIST OF ELEMENTS
                 writer_row.writerow(entry_list)
                 print("The new expense has been recorded!")
+
+                # CLEAR THE LIST TO ADD OTHER ITEMS
                 entry_list.clear()
 
         else:
@@ -125,6 +127,8 @@ def save_file():
                 # SAVE THE FINAL LIST OF ELEMENTS
                 writer_row.writerow(entry_list)
                 print("The new expense has been recorded!")
+
+                # CLEAR THE LIST TO ADD OTHER ITEMS
                 entry_list.clear()
 
     return
