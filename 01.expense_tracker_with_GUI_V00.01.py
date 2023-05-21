@@ -15,7 +15,6 @@ from datetime import date
 from datetime import datetime
 import csv
 import os
-import expense_tracker_utils
 
 
 # Sets up the main application window, giving it the title "Feet to Meters."
@@ -116,6 +115,7 @@ def save_file():
                 writer_row.writerow(entry_list)
                 print("The new expense has been recorded!")
 
+
         else:
             # IF THE FILE DOES EXISTS, THEN OPEN IT AND INSERT THE DATA
             # OPEN THE FILE IN APPEND MODE
@@ -124,6 +124,7 @@ def save_file():
                 # SAVE THE FINAL LIST OF ELEMENTS
                 writer_row.writerow(entry_list)
                 print("The new expense has been recorded!")
+
 
 
 # DEFINE A FUNCTION TO CLOSE THE WINDOW
