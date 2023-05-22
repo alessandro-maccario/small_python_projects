@@ -1,20 +1,22 @@
 """
-    Continue from episode 11:
-    https://www.youtube.com/watch?v=0eltxbvFy30&list=PLP5MAKLy8lP8nJcyISKe3t78rSRVYPxid&index=11
+    Expense Tracker: this is a very simple Expense Tracker made in Python with a GUI in Tkinter.
+    The goal was to understand how the tkinter library works and to learn about it.
 
-    Useful links:
-    - https://stackoverflow.com/questions/39547768/how-do-i-get-an-entry-widget-to-save-what-i-input-python-tkinter
 """
 
-
+# IMPORT THE NECESSARY PACKAGES
 from tkinter import *
-# Import theme tkinter: add some widget to tkinter
 from tkinter import ttk # is a submodule of tkinter. It implements Python's binding to the newer "themed widgets" that were added to Tk in 8.5.
-from tkinter import filedialog # Needed to select the file to open
 from datetime import date
-from datetime import datetime
-import csv
-import os
+
+# IMPORT THE expense_tracker_utils MODULE
+from expense_tracker_utils import get_date
+from expense_tracker_utils import get_category
+from expense_tracker_utils import get_item_name
+from expense_tracker_utils import get_item_price
+from expense_tracker_utils import get_store
+from expense_tracker_utils import save_file
+from expense_tracker_utils import close_window
 
 
 # Sets up the main application window, giving it the title "Feet to Meters."
@@ -33,7 +35,8 @@ root.title("Expense Tracker")
 root.geometry("660x500+650+50") # the +50 means where the windowd will be displayed
 
 # Add the icon .ico (.icon)
-root.iconbitmap("budget.ico")
+# root.iconbitmap("budget.ico")
+root.iconphoto(False, PhotoImage(file='C:/Users/a_mac/Documents/solutions/learning_python/budget.png'))
 
 # Avoid resizing window: width, height (boolean)
 root.resizable(False, False)
@@ -46,104 +49,8 @@ root.resizable(False, False)
 entry_list = []
 
 
-# FUNCTIONS TO SAVE THE VALUES
-def get_date():
-    result = str(purchase_date_entry.get())
-
-    if result == "":
-        result = date.today() # date type
-        print(result)
-        date_format =  "%Y-%m-%d"
-        result = datetime.strptime(result, date_format).date() # get only the date without the time
-        result = result.strftime('%Y-%m-%d')
-        # expense_date = date(expense_date)
-    else:
-        # expense_date = date(expense_date)
-        date_format =  "%Y-%m-%d"
-        result = datetime.strptime(result, date_format).date() # get only the date without the time
-        result = result.strftime('%Y-%m-%d')
-
-    entry_list.append(result)
-    print(entry_list)
-    return result
-
-def get_category(event=None): # Why adding event=None? https://stackoverflow.com/questions/47475783/how-to-bind-enter-key-to-a-tkinter-button
-    result = purchase_category_entry.get()
-    entry_list.append(result)
-    print(entry_list)
-    return result
-
-def get_item_name(event=None):
-    result = purchase_item_name_entry.get()
-    entry_list.append(result)
-    print(entry_list)
-    return result
-
-def get_item_price(event=None):
-    result = purchase_item_price_entry.get()
-    entry_list.append(result)
-    print(entry_list)
-    return result
-
-def get_store(event=None):
-    result = purchase_store_entry.get()
-    entry_list.append(result)
-    print("COMPLETE LIST:", entry_list)
-    return result
-
-def save_file():
-
-    # OPEN A FILE DIALOG TO CHOOSE THE DESTINATION FILE
-    file_path = filedialog.asksaveasfilename(defaultextension=".csv")
-
-    # OPEN THE FILE IN APPEND MODE
-    with open(file_path, mode='a+', newline='') as file:
-        # WRITE THE FILE
-        writer_row = csv.writer(file)
-        
-        
-        # IF THE FILE HAS A SIZE OF 0, THEN IT MEANS THAT IS EMPTY
-        if os.stat(file_path).st_size == 0:
-            print('File is empty!')
-            print('Creating a new file and inserting the header and the data...')
-    
-            # OPEN THE FILE IN APPEND MODE
-            with open(file_path, mode='a+', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames = ["date", "category", "itemName", "itemPrice", "store"])
-                writer.writeheader()
-
-                # SAVE THE FINAL LIST OF ELEMENTS
-                writer_row.writerow(entry_list)
-                print("The new expense has been recorded!")
-
-                # CLEAR THE LIST TO ADD OTHER ITEMS
-                entry_list.clear()
-
-        else:
-            # IF THE FILE DOES EXISTS, THEN OPEN IT AND INSERT THE DATA
-            # OPEN THE FILE IN APPEND MODE
-            with open(file_path, mode='a+', newline='') as file:
-
-                # SAVE THE FINAL LIST OF ELEMENTS
-                writer_row.writerow(entry_list)
-                print("The new expense has been recorded!")
-
-                # CLEAR THE LIST TO ADD OTHER ITEMS
-                entry_list.clear()
-
-    return
-
-
-# DEFINE A FUNCTION TO CLOSE THE WINDOW
-def close_window():
-    root.quit()
-
-
 ###########################################
 ############# Create frames ###############
-# frame_open_file = Frame(root, background="#c4c4be")
-# # frame_item_store.pack(ipadx = 15, ipady=15, padx=15, pady=10, expand=True, fill=X, side=LEFT)
-# frame_open_file.grid(column=0, row=0, columnspan=2, padx = 3, pady = 3, sticky=N + W + E)
 
 frame_date = Frame(root, background="#e39d12")
 # frame_date.pack(ipadx = 3, ipady=3, padx=15, pady=15, expand=True, fill=X, side=LEFT)
@@ -176,13 +83,7 @@ frame_close_window = Frame(root, background="#e32222")
 frame_close_window.grid(column=0, row=6, columnspan=2, padx = 3, pady = 3, sticky=N + W + E)
 
 ###########################################
-###### Create labels, entry, buttons ######
-
-# # Label open file, variable, entry
-# purchase_open_file = StringVar()
-# button_open_file = Button(frame_open_file, text="Open file", command=expense_tracker_utils.expense_file)
-# button_open_file.pack(padx=10, pady=10)
-
+################ MAIN #####################
 
 # Label date, variable, entry
 label_date = Label(frame_date, text="Enter the purchase date: (Format: YYYY-MM-DD)")
@@ -190,69 +91,72 @@ purchase_date = StringVar()
 purchase_date_entry = ttk.Entry(frame_date, textvariable=purchase_date)
 purchase_date_entry.insert(0, date.today())
 purchase_date_entry.focus() # specify where the cursor starts when you start the program
-button_date = Button(frame_date, text="Insert the date", command= get_date)
+button_date = Button(frame_date, text="Insert the date", command= lambda : get_date(entry_list, purchase_date_entry)) # The Lambda function is
 label_date.pack(ipadx = 10, ipady=10, padx=10, pady=10)
 purchase_date_entry.pack()
 button_date.pack(padx=10, pady=10)
+
+# HIT RETURN ON THE KEYBOARD AFTER INSERTING A VALUE, THE VALUES IS ADDED TO THE LIST
+purchase_date_entry.bind('<Return>', lambda x: get_date(entry_list, purchase_date_entry))
 
 # Label category, variable entry
 label_category = Label(frame_category, text="Enter the expense type (e.g.: Food, Transportation, etc.):")
 purchase_category = StringVar()
 purchase_category_entry = ttk.Entry(frame_category, textvariable=purchase_category)
-button_category = Button(frame_category, text="Insert the expense type", command= get_category)
+button_category = Button(frame_category, text="Insert the expense type", command= lambda :  get_category(entry_list, purchase_category_entry))
 label_category.pack(ipadx = 10, ipady=10, padx=10, pady=10)
 purchase_category_entry.pack()
 button_category.pack(padx=10, pady=10)
 
-# WHENEVER YOU HIT RETURN ON THE KEYBOARD AFTER INSERTING A VALUE, THE VALUES IS ADDED TO THE LIST
-purchase_category_entry.bind('<Return>', get_category)
+# HIT RETURN ON THE KEYBOARD AFTER INSERTING A VALUE, THE VALUES IS ADDED TO THE LIST
+purchase_category_entry.bind('<Return>', lambda x: get_category(entry_list, purchase_category_entry))
 
 # Label name, variable entry
 label_item_name = Label(frame_item_name, text="Enter the good or service for the expense type:")
 purchase_item_name = StringVar()
 purchase_item_name_entry = ttk.Entry(frame_item_name, textvariable=purchase_item_name)
-button_item_name = Button(frame_item_name, text="Insert the item", command= get_item_name)
+button_item_name = Button(frame_item_name, text="Insert the item", command= lambda :  get_item_name(entry_list, purchase_item_name_entry))
 label_item_name.pack(ipadx = 10, ipady=10, padx=10, pady=10)
 purchase_item_name_entry.pack()
 button_item_name.pack(padx=10, pady=10)
 
-# WHENEVER YOU HIT RETURN ON THE KEYBOARD AFTER INSERTING A VALUE, THE VALUES IS ADDED TO THE LIST
-purchase_item_name_entry.bind('<Return>', get_item_name)
+# HIT RETURN ON THE KEYBOARD AFTER INSERTING A VALUE, THE VALUES IS ADDED TO THE LIST
+purchase_item_name_entry.bind('<Return>', lambda x: get_item_name(entry_list, purchase_item_name_entry))
 
 # Label price, variable entry
 label_item_price = Label(frame_item_price, text="Enter the price of the good or service:")
 purchase_item_price = DoubleVar()
 purchase_item_price_entry = ttk.Entry(frame_item_price, textvariable=purchase_item_price)
-button_item_price = Button(frame_item_price, text="Enter the price of the good or service:", command= get_item_price)
+button_item_price = Button(frame_item_price, text="Enter the price of the good or service:", command = lambda : get_item_price(entry_list, purchase_item_price))
 label_item_price.pack(ipadx = 10, ipady=10, padx=10, pady=10)
 purchase_item_price_entry.pack()
 button_item_price.pack(padx=10, pady=10)
 
-# WHENEVER YOU HIT RETURN ON THE KEYBOARD AFTER INSERTING A VALUE, THE VALUES IS ADDED TO THE LIST
-purchase_item_price_entry.bind('<Return>', get_item_price)
+# HIT RETURN ON THE KEYBOARD AFTER INSERTING A VALUE, THE VALUES IS ADDED TO THE LIST
+purchase_item_price_entry.bind('<Return>', lambda x: get_item_price(entry_list, purchase_item_price))
 
 # Label store, variable entry
 label_item_store = Label(frame_item_store, text="Enter the store name:")
 purchase_store = StringVar()
 purchase_store_entry = ttk.Entry(frame_item_store, textvariable=purchase_store)
-button_store = Button(frame_item_store, text="Insert the store name", command= get_store)
+button_store = Button(frame_item_store, text="Insert the store name", command= lambda : get_store(entry_list, purchase_store))
 label_item_store.pack(ipadx = 10, ipady=10, padx=10, pady=10)
 purchase_store_entry.pack()
 button_store.pack(padx=10, pady=10)
 
-# WHENEVER YOU HIT RETURN ON THE KEYBOARD AFTER INSERTING A VALUE, THE VALUES IS ADDED TO THE LIST
-purchase_store_entry.bind('<Return>', get_store)
+# HIT RETURN ON THE KEYBOARD AFTER INSERTING A VALUE, THE VALUES IS ADDED TO THE LIST
+purchase_store_entry.bind('<Return>', lambda x: get_store(entry_list, purchase_store))
 
+
+# SAVE THE FILE, CLOSE THE WINDOW
 # Label save file, variable, entry
-button_save_file = Button(frame_save_file, text="Save file", command = save_file)
+button_save_file = Button(frame_save_file, text="Save file", command = lambda : save_file(entry_list))
 button_save_file.pack(padx=10, pady=10)
 
 # Label save file, variable, entry
-button_close_program = Button(frame_close_window, text="Close the window", command = close_window)
+button_close_program = Button(frame_close_window, text="Close the window", command = lambda : close_window(root))
 button_close_program.pack(padx=10, pady=10)
 
-####################################
 
-# This is the way the window of the program will stay continously open
+# KEEP THE WINDOW OF THE PROGRAM ALWAYS OPEN
 root.mainloop()
-
