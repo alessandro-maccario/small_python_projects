@@ -13,3 +13,20 @@
 
     This file takes into account Part I.
 """
+
+# IMPORT PACKAGES
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+from utils import config # it hosts the credentials for the Spotify API
+
+# VARIABLES
+
+
+# Authenticating with Spotipy: authenticate without signing
+# All we need are the IDs, client and secret. Then, we can create our "Spotify" object.
+
+# Authentication - without user
+client_credentials_manager = SpotifyClientCredentials(
+    client_id=config.CLIENT_ID, client_secret=config.CLIENT_SECRET
+)
+sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
