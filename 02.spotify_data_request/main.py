@@ -49,10 +49,10 @@ playlist_URI = playlist_link.split("/")[-1].split("?")[0]
 """
 
 track_uris = [x["track"]["uri"] for x in sp.playlist_tracks(playlist_URI)["items"]]
-print("----------")
-print("----------")
+# print("----------")
+# print("----------")
 
-print(track_uris)
+# print(track_uris)
 # convert2df = pd.DataFrame.from_dict(test)
 # convert2df.to_csv("playlist_tracks.csv", index=False)
 
@@ -65,9 +65,20 @@ print(track_uris)
     artists can make songs in multiple genres), and an artist popularity score.
 """
 
-# convert the for loop in multiple list comprehension
-track_uri = [
-    track["track"]["uri"] for track in sp.playlist_tracks(playlist_URI)["items"]
+tracks = sp.playlist_tracks(playlist_URI)["items"]
+data = [
+    {
+        "track_uri": track["track"]["uri"],
+        "track_name": track["track"]["name"],
+        "artist_uri": track["track"]["artists"][0]["uri"],
+        "artist_info": sp.artist(track["track"]["artists"][0]["uri"]),
+        "artist_name": track["track"]["artists"][0]["name"],
+        "artist_pop": sp.artist(track["track"]["artists"][0]["uri"])["popularity"],
+        "artist_genres": sp.artist(track["track"]["artists"][0]["uri"])["genres"],
+        "album": track["track"]["album"]["name"],
+        "track_pop": track["track"]["popularity"]
+    }
+    for track in tracks
 ]
 
 
@@ -92,3 +103,19 @@ for track in sp.playlist_tracks(playlist_URI)["items"]:
 
     # Popularity of the track
     track_pop = track["track"]["popularity"]
+
+#######################################
+### Extracting Features from Tracks ###
+#######################################
+
+"""
+    Now that we have a list of track URIs, we can extract features from these tracks, 
+    in order to perform our analysis. Spotify has a list of these features for each 
+    of its tracks, from analysis of the audio. We can access these with a single 
+    method of the spotify object 'audio_features(uri)'. 
+    This gives us a list of mostly numerical features that we can use for our analysis.
+"""
+
+# print(sp.audio_features(track_uri)[0])
+
+print(sp.audio_features(data['track_uri'])[0])
